@@ -17,7 +17,9 @@ ldb <-
     
     if(qr(covs)$rank != max(dim(covs)))
 	stop("Covariance matrix not full rank.")
-    b <- (M[[2L]] - M[[1L]]) %*% qr.solve(covs)
+    if( M[[2L]] == M[[1L]] ) offset <- .Machine$double.eps
+    else offset <- 0
+    b <- ((M[[2L]] - M[[1L]]) + offset) %*% qr.solve(covs)
     enorm <- sqrt(sum(b^2))
     res <- NULL
     res$noise <- noise
